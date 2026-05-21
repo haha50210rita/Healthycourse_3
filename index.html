@@ -10,7 +10,6 @@
   html, body { width: 100%; height: 100%; }
   body { font-family: 'Noto Sans TC', sans-serif; background-color: #222; display: flex; justify-content: center; align-items: center; }
   
-  /* 遊戲主容器 */
   #game-container { width: 100vw; max-width: 1280px; aspect-ratio: 16 / 9; background: linear-gradient(135deg, #F3E5F5 0%, #E1BEE7 50%, #CE93D8 100%); position: relative; overflow: hidden; box-shadow: 0 0 30px rgba(0,0,0,0.8); }
   .screen { display: none; width: 100%; height: 100%; padding: 20px; position: absolute; top: 0; left: 0; flex-direction: column; align-items: center; justify-content: center; overflow-y: auto; }
   .screen.active { display: flex; }
@@ -53,6 +52,8 @@
   .falling-item { position: absolute; font-size: 35px; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; z-index: 4; }
   .health-bar { display: flex; gap: 6px; align-items: center; margin-bottom: 12px; background: white; padding: 10px 20px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
   .heart { font-size: 24px; }
+  
+  /* 新增：升級提示動畫 */
   .stage-notify { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 48px; font-weight: 900; color: #FFD700; text-shadow: 2px 2px 10px #000; animation: scaleUp 1s ease-out; z-index: 10; pointer-events: none;}
   @keyframes scaleUp { from { transform: translate(-50%, -50%) scale(0.5); opacity: 0; } to { transform: translate(-50%, -50%) scale(1.5); opacity: 1; } }
 
@@ -81,6 +82,7 @@
      <div class="game-title">🏪 營養闖關島</div>
      <div class="game-subtitle">第三關：飲食迷思與實踐<br><span style="font-size:14px;color:#888;">(通關門檻：210 分 / 滿分 300 分)</span></div>
      <input type="text" id="player-name" class="name-input" placeholder="輸入你的名字" maxlength="10"> 
+     <div class="char-select-title" style="font-weight:700; color:#666; margin-bottom:10px;">選擇你的探險化身：</div>
      <div class="char-options">
        <button class="char-btn" onclick="selectChar('🍎', this)">🍎</button>
        <button class="char-btn selected" onclick="selectChar('🍌', this)">🍌</button>
@@ -107,7 +109,7 @@
    <div id="dodge-screen" class="screen">
     <div class="game-header">
      <div class="badge">階段一：食力超商大作戰</div>
-     <div style="font-weight: 700; color: #333;">目標：接滿 15 個健康食物</div>
+     <div style="font-weight: 700; color: #333;">目標：接滿 18 個健康食物</div>
      <div class="score-box" id="dodge-score-display">積分 <span id="dodge-score">0</span></div>
     </div>
     
@@ -117,7 +119,7 @@
         <span class="heart" id="heart1">❤️</span>
         <span class="heart" id="heart2">❤️</span>
         <span class="heart" id="heart3">❤️</span>
-        <span style="margin-left:16px;font-size:15px;color:#4A148C;font-weight:700;">接取: <span id="catch-count">0</span> / 15</span>
+        <span style="margin-left:16px;font-size:15px;color:#4A148C;font-weight:700;">接取: <span id="catch-count">0</span> / 18</span>
       </div>
       
       <div class="dodge-area" id="dodge-area">
@@ -167,31 +169,20 @@
   </div>
 
   <script>
-  /* =======================================
-     Google Apps Script 網址
-     ======================================= */
   const GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbyo186iZFRTAFd_LG1dexDLRk4iPJhqVLXqqnTcSwHdF2PvG8kDvjUSDUG-E6GaNGoi3g/exec'; 
-
-  const gameState = {
-    name: '', character: '🍌', tutPage: 0,
-    dodgeScore: 0, quizScore: 0, quizStep: 0,
-    activeScreen: 'lobby-screen', focusedIndex: 0, isModalOpen: false,
-    dodgeStage: 1 // 階段 1, 2, 3
-  };
+  const gameState = { name: '', character: '🍌', tutPage: 0, dodgeScore: 0, quizScore: 0, quizStep: 0, activeScreen: 'lobby-screen', focusedIndex: 0, isModalOpen: false, dodgeStage: 1 };
   const PASSING_SCORE = 210;
 
-  /* 遊戲設定 */
-  let dodgeLoopInterval = null;
-  let spawnItemInterval = null;
-  let playerX = 175;
-  let hearts = 3;
-  let catchCount = 0;
-  let fallingItems = [];
+  let dodgeLoopInterval = null; let spawnItemInterval = null;
+  let playerX = 175; let hearts = 3; let catchCount = 0; let moveDirection = 0; let fallingItems = [];
+  
+  // 修改目標為 18
+  const TARGET_CATCH = 18; 
 
   const healthyFoods = ['🍎','🥦','🍌','🥕','🍅','🫐','🥬','🍊','🥝','🍇'];
   const badFoods     = ['🍟','🥤','🍫','🍔','🍕','🧁','🍩','🍪'];
 
-  /* 題庫與邏輯 */
+  // 更換為全新的 15 題題庫
   const quizItems = [
     { q: '在大賣場看到特價的罐頭，外包裝有輕微的膨脹或生鏽，為了省錢可以買回家煮熟吃嗎？', opts: ['絕對不行，膨脹代表內部已腐敗生菌', '煮熟殺菌後就可以安全食用', '把生鏽的地方擦掉就可以吃', '放進冰箱冰一下就可以吃'], ans: 0, exp: '膨脹或生鏽的罐頭有極高的肉毒桿菌中毒風險，煮熟也無法完全消除毒素，絕對不能吃！' },
     { q: '同學說：「常吃炸雞排和薯條沒關係，只要每天運動30分鐘，就不會對心血管造成負擔。」這個觀念正確嗎？', opts: ['不正確，高油脂飲食仍會增加心血管負擔', '正確，運動可以完全抵銷油脂的傷害', '正確，只要流汗就能把油脂排出來', '不正確，要運動兩小時才能吃炸雞'], ans: 0, exp: '運動雖然好，但無法完全抵銷長期高油脂飲食對心血管造成的傷害與阻塞風險。' },
@@ -210,14 +201,16 @@
     { q: '去吃到飽餐廳時，為了不讓腸胃過度負擔，最好的做法是什麼？', opts: ['先吃蔬菜，適量挑選想吃的食物，吃八分飽', '餓一整天再集中一餐狂吃', '專挑炸物和甜點吃到撐為止', '只吃肉類完全不吃蔬菜'], ans: 0, exp: '先吃蔬菜增加飽足感，並控制在八分飽，能有效避免暴飲暴食造成的肥胖與腸胃問題。' }
   ];
 
-  /* 引擎控制 */
+  /* 引擎 */
   document.addEventListener('keydown', (e) => {
     if(gameState.isModalOpen) { if(e.key === 'Enter') document.getElementById('fb-btn').click(); return; }
     if(gameState.activeScreen === 'tutorial-screen') {
       if(e.key === 'ArrowLeft') document.getElementById('prev-btn')?.click();
       if(e.key === 'ArrowRight') document.getElementById('next-btn')?.click();
-    }
-    else if(gameState.activeScreen === 'quiz-screen') {
+    } else if(gameState.activeScreen === 'dodge-screen') {
+      if(e.key === 'ArrowLeft') startMove(-1);
+      if(e.key === 'ArrowRight') startMove(1);
+    } else if(gameState.activeScreen === 'quiz-screen') {
       const optsCount = 4;
       if(e.key === 'ArrowDown') { gameState.focusedIndex = (gameState.focusedIndex + 1) % optsCount; updateFocus('opt-btn'); e.preventDefault();}
       if(e.key === 'ArrowUp') { gameState.focusedIndex = (gameState.focusedIndex - 1 + optsCount) % optsCount; updateFocus('opt-btn'); e.preventDefault();}
@@ -225,11 +218,8 @@
     }
   });
 
-  function updateFocus(className) {
-    const btns = document.querySelectorAll('.' + className);
-    btns.forEach((b, i) => b.classList.toggle('focused', i === gameState.focusedIndex));
-  }
-
+  document.addEventListener('keyup', (e) => { if(gameState.activeScreen === 'dodge-screen') if(e.key === 'ArrowLeft' || e.key === 'ArrowRight') stopMove(); });
+  function updateFocus(className) { document.querySelectorAll('.' + className).forEach((b, i) => b.classList.toggle('focused', i === gameState.focusedIndex)); }
   function switchScreen(id) { document.querySelectorAll('.screen').forEach(s => s.classList.remove('active')); document.getElementById(id).classList.add('active'); gameState.activeScreen = id; }
   function selectChar(emoji, btn) { gameState.character = emoji; document.querySelectorAll('.char-btn').forEach(b => b.classList.remove('selected')); btn.classList.add('selected'); }
 
@@ -258,7 +248,7 @@
     document.getElementById('carousel-page').textContent = gameState.tutPage + 1; renderTutorialNav();
   }
 
-  /* == 閃避遊戲引擎 (三階段難度) == */
+  /* == 閃避遊戲引擎 (新增三階段難度) == */
   function startDodgeGame() {
     gameState.dodgeScore = 0; catchCount = 0; hearts = 3; playerX = 175; gameState.dodgeStage = 1;
     document.getElementById('dodge-score').textContent = '0';
@@ -293,8 +283,13 @@
   }
 
   function gameLoop() {
-    // 速度倍率：階段1(1.0), 階段2(1.25), 階段3(1.5)
-    let speedFactor = 1 + (gameState.dodgeStage - 1) * 0.25;
+    // 判斷階段
+    if (catchCount < 6) gameState.dodgeStage = 1;
+    else if (catchCount < 12) gameState.dodgeStage = 2;
+    else gameState.dodgeStage = 3;
+
+    // 設定速度 (1x, 1.5x, 2.0x)
+    let speedFactor = (gameState.dodgeStage === 1) ? 1.0 : (gameState.dodgeStage === 2 ? 1.5 : 2.0);
     
     if (moveDirection !== 0) {
       playerX = Math.max(0, Math.min(350, playerX + moveDirection * 12));
@@ -314,9 +309,10 @@
           document.getElementById('dodge-score').textContent = gameState.dodgeScore;
           document.getElementById('catch-count').textContent = catchCount;
           
-          // 階段控制
-          if(catchCount === 5 && gameState.dodgeStage === 1) notifyStageUp(2);
-          if(catchCount === 10 && gameState.dodgeStage === 2) notifyStageUp(3);
+          // 階段提示
+          if(catchCount === 6 && gameState.dodgeStage === 1) notifyStageUp(2);
+          if(catchCount === 12 && gameState.dodgeStage === 2) notifyStageUp(3);
+          
           if(catchCount >= TARGET_CATCH) endDodgeGame(true);
         } else {
           hearts--;
@@ -330,7 +326,6 @@
   }
 
   function notifyStageUp(s) {
-    gameState.dodgeStage = s;
     const n = document.getElementById('stage-notify');
     n.textContent = 'STAGE ' + s + ' !!';
     n.style.display = 'block';
@@ -390,20 +385,19 @@
 
   function showResult() {
     const total = gameState.dodgeScore + gameState.quizScore;
-    document.getElementById('final-name').textContent = `${gameState.name} 的探險成績`;
+    document.getElementById('final-name').textContent = `${gameState.name} 的成績`;
     document.getElementById('final-score').textContent = total;
     const title = document.getElementById('result-title'); const msg = document.getElementById('result-msg');
-    const emoji = document.getElementById('result-emoji'); const btn = document.getElementById('result-btn');
+    const btn = document.getElementById('result-btn');
 
     if (total >= PASSING_SCORE) {
-      localStorage.setItem('score_level3', total);
-      emoji.textContent = '🏆'; title.textContent = '闖關成功！'; title.style.color = '#8E24AA';
-      msg.innerHTML = `太棒了！你獲得了 ${total} 分。<br>你已經具備破解飲食迷思與避開地雷食物的能力了！`;
+      title.textContent = '闖關成功！'; title.style.color = '#8E24AA';
+      msg.innerHTML = `太棒了！你獲得了 ${total} 分。<br>你已經具備破解飲食迷思的能力了！`;
       btn.textContent = '完成任務 👋'; btn.onclick = () => alert('恭喜過關！');
       sendToSheets(total);
     } else {
-      emoji.textContent = '💪'; title.textContent = '闖關失敗！'; title.style.color = '#E53935';
-      msg.innerHTML = `你獲得了 ${total} 分，低於門檻 ${PASSING_SCORE} 分。<br>必須重新挑戰！`;
+      title.textContent = '闖關失敗！'; title.style.color = '#E53935';
+      msg.innerHTML = `你獲得了 ${total} 分，低於 ${PASSING_SCORE} 分，請重新挑戰！`;
       btn.textContent = '強制重新開始 🔄'; btn.onclick = () => { gameState.tutPage = 0; updateCarousel(); switchScreen('lobby-screen'); };
     }
     switchScreen('result-screen');
