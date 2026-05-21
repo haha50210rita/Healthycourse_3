@@ -14,41 +14,62 @@
   .screen { display: none; width: 100%; height: 100%; padding: 20px; position: absolute; top: 0; left: 0; flex-direction: column; align-items: center; justify-content: center; overflow-y: auto; }
   .screen.active { display: flex; }
 
+  /* 字體與按鈕 */
   .game-title { font-size: 40px; font-weight: 900; color: #4A148C; text-shadow: 2px 2px 0 #CE93D8; margin-bottom: 8px; text-align: center;}
   .game-subtitle { font-size: 18px; color: #6A1B9A; margin-bottom: 24px; font-weight: 700; text-align: center; line-height: 1.5;}
   .primary-btn { background: linear-gradient(135deg, #8E24AA, #4A148C); color: white; border: none; padding: 14px 40px; font-size: 20px; font-weight: 700; border-radius: 16px; cursor: pointer; transition: all 0.2s; font-family: inherit; box-shadow: 0 4px 12px rgba(142,36,170,0.3); }
   .primary-btn:hover:not(:disabled) { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(142,36,170,0.5); }
-  
+  .primary-btn:disabled { background: #B0BEC5; cursor: not-allowed; box-shadow: none; color: #ECEFF1; }
+
+  /* 大廳 */
   .lobby-card { background: rgba(255, 255, 255, 0.95); border-radius: 24px; padding: 30px 40px; text-align: center; max-width: 500px; width: 100%; box-shadow: 0 12px 40px rgba(0,0,0,0.15); }
   .name-input { width: 100%; padding: 14px; font-size: 18px; border: 3px solid #AB47BC; border-radius: 16px; outline: none; text-align: center; margin-bottom: 20px; font-family: inherit; }
   .char-options { display: flex; justify-content: center; gap: 16px; margin-bottom: 24px; }
   .char-btn { background: #F3E5F5; border: 3px solid transparent; border-radius: 16px; padding: 12px 20px; font-size: 40px; cursor: pointer; transition: all 0.2s; }
   .char-btn.selected { border-color: #8E24AA; background: #E1BEE7; transform: scale(1.1); box-shadow: 0 4px 12px rgba(142,36,170,0.3); }
 
+  /* 教材輪播 */
   .carousel-wrap { background: white; border-radius: 20px; padding: 24px; max-width: 800px; width: 100%; box-shadow: 0 8px 24px rgba(0,0,0,0.1); margin-bottom: 10px; }
   .carousel-content { display: none; text-align: center; }
   .carousel-content.active { display: block; animation: fadeIn 0.4s; }
-  .nav-btn { background: #AB47BC; color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: 700; cursor: pointer; }
-  
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  .carousel-nav { display: flex; justify-content: center; gap: 12px; margin-top: 16px; }
+  .nav-btn { background: #AB47BC; color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+  .nav-btn:hover:not(:disabled) { background: #8E24AA; }
+  .nav-btn:disabled { background: #CFD8DC; cursor: not-allowed; color: #90A4AE; }
+  .keyboard-hint { text-align: center; color: #6A1B9A; font-weight: 700; margin-top: 10px; font-size: 14px; background: #F3E5F5; padding: 8px; border-radius: 8px;}
+
+  /* 遊戲頂部欄 */
   .game-header { background: white; border-radius: 16px; padding: 12px 24px; display: flex; align-items: center; justify-content: space-between; width: 100%; max-width: 800px; margin-bottom: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
   .badge { background: linear-gradient(135deg, #8E24AA, #4A148C); color: white; border-radius: 10px; padding: 6px 16px; font-weight: 700; }
   .score-box { background: #AB47BC; color: white; border-radius: 10px; padding: 6px 16px; font-weight: 800; transition: transform 0.2s;}
   .score-box.penalty { background: #E53935; transform: scale(1.1); }
 
+  /* 階段一：閃避遊戲 */
   .dodge-wrapper { display: flex; flex-direction: column; align-items: center; width: 100%; max-width: 600px; }
   .dodge-area { width: 400px; height: 400px; background: linear-gradient(180deg,#E3F2FD,#B3E5FC); border-radius: 20px; position: relative; overflow: hidden; box-shadow: inset 0 0 20px rgba(0,0,0,0.1), 0 8px 24px rgba(0,0,0,0.15); border: 4px solid #fff; }
   .player-char { position: absolute; font-size: 45px; bottom: 10px; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; z-index: 5; transition: none; }
   .falling-item { position: absolute; font-size: 35px; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; z-index: 4; }
+  .health-bar { display: flex; gap: 6px; align-items: center; margin-bottom: 12px; background: white; padding: 10px 20px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+  .heart { font-size: 24px; }
   .stage-notify { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 48px; font-weight: 900; color: #FFD700; text-shadow: 2px 2px 10px #000; animation: scaleUp 1s ease-out; z-index: 10; pointer-events: none;}
   @keyframes scaleUp { from { transform: translate(-50%, -50%) scale(0.5); opacity: 0; } to { transform: translate(-50%, -50%) scale(1.5); opacity: 1; } }
 
+  /* 階段二：問答 */
   .quiz-area { background: white; border-radius: 20px; padding: 30px; max-width: 800px; width: 100%; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-  .opt-btn { background: #F5F5F5; border: 3px solid #E0E0E0; border-radius: 12px; padding: 16px; cursor: pointer; font-size: 16px; font-weight: 600; text-align: left; color: #444; width: 100%; margin-bottom: 10px; }
+  .quiz-q { font-size: 20px; font-weight: 700; color: #333; margin-bottom: 24px; line-height: 1.5; }
+  .quiz-opts { display: flex; flex-direction: column; gap: 12px; }
+  .opt-btn { background: #F5F5F5; border: 3px solid #E0E0E0; border-radius: 12px; padding: 16px; cursor: pointer; font-size: 16px; font-weight: 600; text-align: left; color: #444; transition: all 0.1s; font-family: inherit; line-height: 1.4; }
+  .opt-btn.focused { border-color: #0288D1; background: #E1F5FE; transform: scale(1.02); box-shadow: 0 4px 12px rgba(2,136,209,0.2); }
   .opt-btn.correct-ans { background: #E8F5E9; border-color: #4CAF50; color: #2E7D32; }
   .opt-btn.wrong-ans { background: #FFEBEE; border-color: #E53935; color: #C62828; }
 
+  /* 彈出回饋 */
   .feedback-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: none; align-items: center; justify-content: center; z-index: 100; }
-  .feedback-box { background: white; border-radius: 20px; padding: 30px; text-align: center; max-width: 450px; width: 90%; }
+  .feedback-box { background: white; border-radius: 20px; padding: 30px; text-align: center; max-width: 450px; width: 90%; animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+  @keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+  .fb-title { font-size: 24px; font-weight: 900; margin-bottom: 12px; }
+  .fb-desc { font-size: 16px; color: #333; line-height: 1.6; margin-bottom: 20px; text-align: left; background: #F5F5F5; padding: 16px; border-radius: 12px;}
   </style>
  </head>
  <body>
@@ -58,19 +79,28 @@
      <div class="game-title">🏪 營養闖關島</div>
      <div class="game-subtitle">第三關：飲食迷思與實踐<br><span style="font-size:14px;color:#888;">(通關門檻：210 分 / 滿分 300 分)</span></div>
      <input type="text" id="player-name" class="name-input" placeholder="輸入你的名字" maxlength="10"> 
+     <div class="char-select-title" style="font-weight:700; color:#666; margin-bottom:10px;">選擇你的探險化身：</div>
+     <div class="char-options">
+       <button class="char-btn" onclick="selectChar('🍎', this)">🍎</button>
+       <button class="char-btn selected" onclick="selectChar('🍌', this)">🍌</button>
+       <button class="char-btn" onclick="selectChar('🍊', this)">🍊</button>
+     </div>
      <button class="primary-btn" onclick="startTutorial()">進入教材區</button>
     </div>
    </div>
    
    <div id="tutorial-screen" class="screen">
-    <div class="game-title">📚 終極前導訓練</div>
+    <div class="game-title" style="color: #4A148C; text-shadow: none;">📚 終極前導訓練</div>
+    <div class="game-subtitle" style="color: #666;">仔細閱讀每張教材，準備迎接最終挑戰！</div>
     <div class="carousel-wrap">
       <div class="carousel-content active"><img src="飲食風險_1.JPG" style="width: 100%; border-radius: 12px;"></div>
       <div class="carousel-content"><img src="飲食風險_2.JPG" style="width: 100%; border-radius: 12px;"></div>
       <div class="carousel-content"><img src="飲食風險_3.JPG" style="width: 100%; border-radius: 12px;"></div>
       <div class="carousel-content"><img src="飲食風險_4.JPG" style="width: 100%; border-radius: 12px;"></div>
       <div class="carousel-nav" id="carousel-nav"></div>
+      <div class="carousel-indicator" style="text-align: center; color: #888; margin-top: 10px;"><span id="carousel-page">1</span> / 4</div>
     </div>
+    <div class="keyboard-hint">⌨️ 提示：使用鍵盤【←】【→】方向鍵來切換圖片！</div>
    </div>
 
    <div id="dodge-screen" class="screen">
@@ -80,166 +110,85 @@
      <div class="score-box" id="dodge-score-display">積分 <span id="dodge-score">0</span></div>
     </div>
     <div class="dodge-wrapper">
+      <div class="health-bar">
+        <span style="font-size:16px;font-weight:900;color:#AD1457;">生命值：</span>
+        <span class="heart" id="heart1">❤️</span>
+        <span class="heart" id="heart2">❤️</span>
+        <span class="heart" id="heart3">❤️</span>
+        <span style="margin-left:16px;font-size:15px;color:#4A148C;font-weight:700;">接取: <span id="catch-count">0</span> / 18</span>
+      </div>
       <div class="dodge-area" id="dodge-area">
         <div class="player-char" id="dodge-player">🍌</div>
         <div id="stage-notify" class="stage-notify" style="display:none;"></div>
       </div>
+      <div class="keyboard-hint" style="width: 100%; margin-top: 16px;">⌨️ 電腦玩家可使用鍵盤【←】【→】方向鍵移動！</div>
     </div>
    </div>
    
    <div id="quiz-screen" class="screen">
     <div class="game-header">
-     <div class="badge">階段二：迷思大破解</div>
-     <div class="score-box" id="quiz-score-display">積分 <span id="quiz-score">0</span></div>
+     <div class="badge" style="background: linear-gradient(135deg, #0288D1, #01579B);">階段二：迷思大破解</div>
+     <div style="font-weight: 700; color: #333;">題號：<span id="quiz-progress">1</span> / 15</div>
+     <div class="score-box" style="background: #0288D1;" id="quiz-score-display">積分 <span id="quiz-score">0</span></div>
     </div>
     <div class="quiz-area">
-     <div class="quiz-q" id="quiz-q"></div>
-     <div id="quiz-opts"></div>
+     <div class="quiz-q" id="quiz-q">題目載入中...</div>
+     <div class="quiz-opts" id="quiz-opts"></div>
     </div>
+    <div class="keyboard-hint" style="width: 100%; max-width: 800px; background: #E1F5FE; color: #01579B;">⌨️ 答錯扣10分並重試！使用鍵盤【↑】【↓】選擇，按【Enter】確認！</div>
    </div>
    
    <div id="result-screen" class="screen">
-    <div class="lobby-card">
-     <div id="result-emoji" style="font-size:70px;">🏆</div>
-     <div id="result-title" style="font-size:30px; font-weight:900;"></div>
-     <div id="final-score" style="font-size:50px; font-weight:900; color:#8E24AA;"></div>
-     <div id="result-msg" style="margin:20px 0;"></div>
-     <button class="primary-btn" id="result-btn">完成任務</button>
-     <button class="primary-btn" id="csv-btn" style="margin-top:10px; background:#1976D2;">下載CSV</button>
+    <div class="lobby-card" style="max-width: 600px;">
+     <div style="font-size: 70px; margin-bottom: 10px;" id="result-emoji">🏆</div>
+     <div class="game-title" id="result-title">闖關成功！</div>
+     <div style="font-size: 20px; color: #333; margin-bottom: 20px;" id="final-name"></div>
+     <div style="background: #F3E5F5; border-radius: 16px; padding: 20px; margin-bottom: 16px;">
+        <div style="font-size: 50px; font-weight: 900; color: #8E24AA; line-height: 1;" id="final-score">0</div>
+        <div style="font-size: 14px; color: #888; margin-top: 8px;">總積分 (滿分 300 分)</div>
+     </div>
+     <div id="result-msg" style="font-size: 16px; color: #555; line-height: 1.6; margin-bottom: 24px; font-weight: 700;"></div>
+     <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+       <button class="primary-btn" id="result-btn">完成最終任務 👋</button>
+       <button class="primary-btn" id="csv-btn" style="background: linear-gradient(135deg, #1976D2, #1565C0);">下載成績單 (CSV)</button>
+     </div>
     </div>
    </div>
 
    <div class="feedback-overlay" id="feedback-modal">
      <div class="feedback-box">
-       <div class="fb-title" id="fb-title"></div>
-       <div class="fb-desc" id="fb-desc"></div>
-       <button class="primary-btn" id="fb-btn" style="width:100%">繼續</button>
+       <div class="fb-title" id="fb-title">訊息</div>
+       <div class="fb-desc" id="fb-desc">解說文字...</div>
+       <button class="primary-btn" id="fb-btn" style="width: 100%; padding: 10px;">繼續 (按 Enter)</button>
      </div>
    </div>
   </div>
 
   <script>
   const GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbyo186iZFRTAFd_LG1dexDLRk4iPJhqVLXqqnTcSwHdF2PvG8kDvjUSDUG-E6GaNGoi3g/exec'; 
-  const gameState = { name: '', dodgeScore: 0, quizScore: 0, quizStep: 0, activeScreen: 'lobby-screen', isModalOpen: false, dodgeStage: 1 };
-  
-  let dodgeLoopInterval, spawnItemInterval, playerX = 175, catchCount = 0, fallingItems = [], hearts = 3;
-  const TARGET_CATCH = 18;
+  const gameState = { name: '', character: '🍌', tutPage: 0, dodgeScore: 0, quizScore: 0, quizStep: 0, activeScreen: 'lobby-screen', focusedIndex: 0, isModalOpen: false, dodgeStage: 1 };
+  const PASSING_SCORE = 210;
+
+  let dodgeLoopInterval = null; let spawnItemInterval = null;
+  let playerX = 175; let hearts = 3; let catchCount = 0; let moveDirection = 0; let fallingItems = [];
+  const TARGET_CATCH = 18; 
+
   const healthyFoods = ['🍎','🥦','🍌','🥕','🍅','🫐','🥬','🍊','🥝','🍇'];
-  const badFoods = ['🍟','🥤','🍫','🍔','🍕','🧁','🍩','🍪'];
+  const badFoods     = ['🍟','🥤','🍫','🍔','🍕','🧁','🍩','🍪'];
 
   const quizItems = [
-    { q: '在大賣場看到特價的罐頭，外包裝有輕微膨脹生鏽，可以買嗎？', opts: ['絕對不行，膨脹代表腐敗生菌', '煮熟就安全', '擦掉鏽斑就好', '冷藏即可'], ans: 0, exp: '膨脹罐頭有肉毒桿菌中毒風險，不可食用！' },
-    { q: '同學說：「常吃炸物，只要每天運動30分鐘就沒負擔」，正確嗎？', opts: ['不正確，運動無法抵銷高油傷害', '正確', '正確，流汗就好', '不正確，要兩小時'], ans: 0, exp: '油炸物對心血管傷害很大。' },
-    { q: '關於健康風險，下列哪一個行為最容易導致肥胖、蛀牙與體力變差？', opts: ['愛吃零食飲料且不運動', '每天喝水', '吃天然地瓜', '少量多餐'], ans: 0, exp: '高糖與缺乏運動是主因。' },
-    { q: '每天一杯全糖珍珠奶茶，最容易引發什麼問題？', opts: ['肥胖與糖尿病風險', '更強壯', '視力變好', '記憶力提升'], ans: 0, exp: '糖分攝取過高易引發慢性病。' },
-    { q: '吃太鹹對身體有何危害？', opts: ['高血壓與腎臟負擔', '蛀牙', '貧血', '近視'], ans: 0, exp: '鈉攝取過多導致血壓升高。' },
-    { q: '哪種習慣最容易造成血管阻塞？', opts: ['常吃油炸與加工肉品', '常吃蔬果', '喝水', '吃糙米'], ans: 0, exp: '飽和脂肪累積易造成血管阻塞。' },
-    { q: '培養良好飲食習慣應遵守什麼？', opts: ['少油少鹽少糖', '只吃喜歡的', '渴了喝果汁', '不吃澱粉'], ans: 0, exp: '三少原則是基礎。' },
-    { q: '便秘時應該增加攝取什麼？', opts: ['蔬菜水果與水分', '炸雞', '白飯', '含糖飲料'], ans: 0, exp: '膳食纖維可促進腸道蠕動。' },
-    { q: '加工肉品(如香腸)為什麼建議少吃？', opts: ['鈉與添加物過多', '不好吃', '太貴', '沒營養'], ans: 0, exp: '高鈉與添加物負擔大。' },
-    { q: '預防蛀牙最好的方式？', opts: ['刷牙並少吃甜食', '多吃糖', '多喝果汁', '少喝水'], ans: 0, exp: '清潔與減少糖分接觸很重要。' },
-    { q: '只吃蘋果減肥有什麼風險？', opts: ['營養不良與免疫力下降', '健康', '骨骼更強', '更聰明'], ans: 0, exp: '營養失衡對生長發育嚴重有害。' },
-    { q: '睡前吃宵夜（如麻辣鍋）最容易引發？', opts: ['胃食道逆流與腸胃負擔', '睡眠提升', '精神變好', '生長發育'], ans: 0, exp: '睡前進食影響睡眠與消化。' },
-    { q: '把薯條換成烤地瓜，主要好處是？', opts: ['烤地瓜天然且富含纖維', '地瓜便宜', '薯條比較好吃', '一樣'], ans: 0, exp: '原態食物優於油炸物。' },
-    { q: '什麼生活習慣導致兒童肥胖？', opts: ['攝取過多高熱量且缺乏運動', '睡夠', '少看電視', '規律運動'], ans: 0, exp: '熱量過剩是關鍵。' },
-    { q: '吃到飽餐廳，健康的策略是？', opts: ['先吃蔬菜八分飽', '餓整天再集中吃', '專挑甜點', '不吃菜'], ans: 0, exp: '適量與均衡最重要。' }
-  ];
-
-  // 遊戲引擎與邏輯 (與前版一致，確保三階段順暢運作)
-  function startDodgeGame() {
-    gameState.dodgeScore = 0; catchCount = 0; hearts = 3; playerX = 175; gameState.dodgeStage = 1;
-    clearInterval(dodgeLoopInterval); clearInterval(spawnItemInterval);
-    dodgeLoopInterval = setInterval(gameLoop, 30);
-    spawnItemInterval = setInterval(spawnFallingItem, 700);
-    switchScreen('dodge-screen');
-  }
-
-  function gameLoop() {
-    let speed = (catchCount < 6) ? 1.0 : (catchCount < 12 ? 1.5 : 2.0);
-    if(catchCount === 6 && gameState.dodgeStage === 1) notifyStageUp(2);
-    if(catchCount === 12 && gameState.dodgeStage === 2) notifyStageUp(3);
-    
-    // 移動玩家 (Left: -1, Right: 1)
-    if(moveDirection !== 0) { playerX = Math.max(0, Math.min(360, playerX + moveDirection * 12)); document.getElementById('dodge-player').style.left = playerX + 'px'; }
-    
-    fallingItems.forEach((el, i) => {
-       let top = parseFloat(el.dataset.topVal) + (4 * speed);
-       el.dataset.topVal = top; el.style.top = top + 'px';
-       if (top > 320 && top < 380 && Math.abs(parseFloat(el.style.left) - playerX) < 45) {
-         if (el.dataset.healthy === 'true') {
-           catchCount++; gameState.dodgeScore += 10;
-           document.getElementById('dodge-score').textContent = gameState.dodgeScore;
-           document.getElementById('catch-count').textContent = catchCount;
-           if(catchCount >= TARGET_CATCH) endDodgeGame(true);
-         } else {
-           hearts--; document.getElementById('heart' + (hearts + 1)).textContent = '🖤';
-           if (hearts <= 0) endDodgeGame(false);
-         }
-         el.remove(); fallingItems.splice(i, 1);
-       } else if (top > 400) { el.remove(); fallingItems.splice(i, 1); }
-    });
-  }
-
-  function notifyStageUp(s) { 
-      gameState.dodgeStage = s; 
-      const n = document.getElementById('stage-notify');
-      n.textContent = 'STAGE ' + s + ' !!'; n.style.display = 'block'; 
-      setTimeout(() => n.style.display = 'none', 1000); 
-  }
-
-  function startMove(dir) { moveDirection = dir; }
-  function stopMove() { moveDirection = 0; }
-  function endDodgeGame(win) { clearInterval(dodgeLoopInterval); clearInterval(spawnItemInterval); if(win) startQuiz(); else showFeedback(false, '愛心沒了！再試一次！', startDodgeGame); }
-  
-  function startQuiz() { gameState.quizStep = 0; renderQuizItem(); switchScreen('quiz-screen'); }
-  function renderQuizItem() { 
-      const q = quizItems[gameState.quizStep];
-      document.getElementById('quiz-progress').textContent = gameState.quizStep + 1;
-      document.getElementById('quiz-q').textContent = q.q;
-      const opts = document.getElementById('quiz-opts'); opts.innerHTML = '';
-      q.opts.forEach((o, i) => {
-          const btn = document.createElement('button'); btn.className = 'opt-btn'; btn.textContent = o;
-          btn.onclick = () => {
-              if(i === q.ans) {
-                  gameState.quizScore += 10; document.getElementById('quiz-score').textContent = gameState.quizScore;
-                  showFeedback(true, '答對了！'+q.exp, () => { gameState.quizStep++; if(gameState.quizStep < quizItems.length) renderQuizItem(); else showResult(); });
-              } else {
-                  gameState.quizScore -= 10; document.getElementById('quiz-score').textContent = gameState.quizScore;
-                  showFeedback(false, '再想想看！', () => {});
-              }
-          }; opts.appendChild(btn);
-      });
-  }
-  
-  function showFeedback(isCorrect, desc, cb) { 
-      gameState.isModalOpen = true; const m = document.getElementById('feedback-modal');
-      document.getElementById('fb-title').textContent = isCorrect ? '提示' : '哎呀';
-      document.getElementById('fb-desc').innerHTML = desc;
-      document.getElementById('fb-btn').onclick = () => { m.style.display = 'none'; gameState.isModalOpen = false; cb(); };
-      m.style.display = 'flex';
-  }
-
-  function showResult() {
-      const total = gameState.dodgeScore + gameState.quizScore;
-      document.getElementById('final-score').textContent = total;
-      document.getElementById('result-title').textContent = (total >= PASSING_SCORE) ? '闖關成功！' : '闖關失敗！';
-      document.getElementById('result-btn').onclick = () => location.reload();
-      switchScreen('result-screen');
-      if(total >= PASSING_SCORE) sendToSheets(total);
-  }
-
-  function sendToSheets(total) {
-      const url = new URL(GOOGLE_SHEET_URL);
-      url.searchParams.append('name', gameState.name);
-      url.searchParams.append('total', total);
-      fetch(url, { method: 'GET', mode: 'no-cors' });
-  }
-
-  document.getElementById('csv-btn').onclick = () => {
-      const csv = `姓名,總分\n${gameState.name},${gameState.dodgeScore + gameState.quizScore}`;
-      const blob = new Blob(["\uFEFF"+csv], {type: 'text/csv'});
-      const link = document.createElement("a"); link.href = URL.createObjectURL(blob); link.download = '成績.csv'; link.click();
-  }
-  </script>
- </body>
-</html>
+    { q: '在大賣場看到特價的罐頭，外包裝有輕微的膨脹或生鏽，為了省錢可以買回家煮熟吃嗎？', opts: ['絕對不行，膨脹代表內部已腐敗生菌', '煮熟殺菌後就可以安全食用', '把生鏽的地方擦掉就可以吃', '放進冰箱冰一下就可以吃'], ans: 0, exp: '膨脹或生鏽的罐頭有極高的肉毒桿菌中毒風險，煮熟也無法完全消除毒素，絕對不能吃！' },
+    { q: '同學說：「常吃炸雞排和薯條沒關係，只要每天運動30分鐘，就不會對心血管造成負擔。」這個觀念正確嗎？', opts: ['不正確，高油脂飲食仍會增加心血管負擔', '正確，運動可以完全抵銷油脂的傷害', '正確，只要流汗就能把油脂排出來', '不正確，要運動兩小時才能吃炸雞'], ans: 0, exp: '運動雖然好，但無法完全抵銷長期高油脂飲食對心血管造成的傷害與阻塞風險。' },
+    { q: '關於健康風險，下列哪一個行為最容易導致肥胖、蛀牙與體力變差？', opts: ['愛吃零食與含糖飲料，且不運動', '每天喝充足的白開水', '吃富含膳食纖維的天然地瓜', '嘗試少量多餐且均衡飲食'], ans: 0, exp: '高糖飲食加上缺乏運動，是造成兒童蛀牙、肥胖以及體力下降的最主要原因。' },
+    { q: '每天放學都買一杯「全糖珍珠奶茶」解渴，長期下來最容易引發哪種健康問題？', opts: ['導致肥胖及增加罹患糖尿病的風險', '骨骼變得更強壯', '幫助長高和增強視力', '提升大腦記憶力'], ans: 0, exp: '含糖飲料熱量極高，長期過量飲用會導致血糖不穩，增加肥胖與慢性病（如糖尿病）風險。' },
+    { q: '喜歡吃重口味，常常加很多醬油、胡椒鹽，或是常吃泡麵，最容易增加哪一種疾病的風險？', opts: ['高血壓與腎臟負擔', '蛀牙與牙周病', '骨質疏鬆症', '貧血與頭暈'], ans: 0, exp: '這些食物的「鈉（鹽分）」含量極高，攝取過多會使血壓升高，並加重腎臟的排毒負擔。' },
+    { q: '下列哪一種飲食習慣，長期下來最容易造成血管阻塞、引發心血管疾病？', opts: ['三餐常吃高油脂的油炸食物與加工肉品', '每天吃五種不同顏色的蔬果', '每天喝足夠的白開水', '以糙米取代白米當主食'], ans: 0, exp: '高油脂與加工肉品含有過多飽和脂肪，會累積在血管壁，增加心血管疾病的危險。' },
+    { q: '為了預防飲食引起的健康問題，我們應該培養什麼樣的良好習慣？', opts: ['飲食多樣化並遵守少油、少鹽、少糖的原則', '只吃自己喜歡的食物', '渴了就喝果汁代替水', '為了減肥完全不吃澱粉'], ans: 0, exp: '遵守「三少」原則並均衡攝取六大類食物，是預防各種飲食相關疾病的最佳防護罩。' },
+    { q: '小華最近常常便秘，肚子不舒服。他應該要「減少」哪種飲食習慣，並「增加」哪種食物的攝取？', opts: ['減少精緻零食，增加蔬菜水果與水分', '減少喝水，增加炸物', '減少蔬菜，增加白飯', '減少水果，增加含糖飲料'], ans: 0, exp: '蔬菜水果富含膳食纖維，搭配充足的水分，能有效促進腸胃蠕動、改善便秘。' },
+    { q: '長輩常說「吃得太鹹對身體不好」，下列哪一種食物的「隱藏鹽分（鈉）」通常很高，應該少吃？', opts: ['加工的火腿、香腸與熱狗', '新鮮的蘋果', '水煮蛋', '清蒸鮮魚'], ans: 0, exp: '加工肉品在製作與保存過程中會加入大量的鹽與調味料，屬於高鈉的「紅燈食物」。' },
+    { q: '如果想要預防蛀牙，除了吃完東西要仔細刷牙之外，飲食上最應該避免什麼？', opts: ['頻繁吃黏牙的甜食與含糖飲料', '多吃深色蔬菜', '喝鮮奶補充鈣質', '吃無調味的綜合堅果'], ans: 0, exp: '甜食與糖分容易附著在牙齒上，提供細菌養分產生酸性物質，進而腐蝕牙齒造成蛀牙。' },
+    { q: '為了快速減肥，小美決定每天「只吃蘋果」，不吃其他食物。這樣的做法會帶來什麼風險？', opts: ['會導致營養不良、肌肉流失與免疫力下降', '會非常健康且充滿活力', '會讓骨骼變得更強壯', '頭腦會變得更聰明'], ans: 0, exp: '極端的單一食物減肥法會讓身體缺乏蛋白質與脂肪等必需營養素，嚴重損害健康與發育。' },
+    { q: '睡前吃大量的宵夜（例如：麻辣鍋、炸雞排），最容易對身體造成什麼影響？', opts: ['引起胃食道逆流並增加腸胃負擔', '幫助睡眠品質提升', '隔天精神會更好', '有助於肌肉快速生長'], ans: 0, exp: '睡前吃太油、太飽，躺下時容易讓胃酸逆流，也讓腸胃在睡覺時無法休息。' },
+    { q: '在超商想買點心，下列哪一種替換方式可以有效「減少健康風險」？', opts: ['把炸薯條換成無加糖的烤地瓜', '把白開水換成運動飲料', '把新鮮水果換成水果軟糖', '把原味優格換成巧克力冰淇淋'], ans: 0, exp: '烤地瓜是天然的原態食物，富含纖維，比經過高溫油炸的加工薯條健康非常多。' },
+    { q: '預防兒童肥胖，下列哪一個生活習慣是「錯誤」的？', opts: ['以含糖飲料取代白開水當作水分來源', '每天睡足 8 到 10 小時', '減少看電視與滑手機的時間', '養成規律運動的習慣'], ans: 0, exp: '含糖飲料是造成肥胖的主要元兇，人體的水分來源絕對應該以白開水為主。' },
+    { q
