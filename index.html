@@ -3,7 +3,7 @@
  <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>食力大挑戰 - 第三關：飲食迷思與實踐</title>
+  <title>食力大挑戰 - 第三關：飲食風險與迷思破解</title>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
   <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -14,21 +14,18 @@
   .screen { display: none; width: 100%; height: 100%; padding: 20px; position: absolute; top: 0; left: 0; flex-direction: column; align-items: center; justify-content: center; overflow-y: auto; }
   .screen.active { display: flex; }
 
-  /* 字體與按鈕 */
   .game-title { font-size: 40px; font-weight: 900; color: #4A148C; text-shadow: 2px 2px 0 #CE93D8; margin-bottom: 8px; text-align: center;}
   .game-subtitle { font-size: 18px; color: #6A1B9A; margin-bottom: 24px; font-weight: 700; text-align: center; line-height: 1.5;}
   .primary-btn { background: linear-gradient(135deg, #8E24AA, #4A148C); color: white; border: none; padding: 14px 40px; font-size: 20px; font-weight: 700; border-radius: 16px; cursor: pointer; transition: all 0.2s; font-family: inherit; box-shadow: 0 4px 12px rgba(142,36,170,0.3); }
   .primary-btn:hover:not(:disabled) { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(142,36,170,0.5); }
   .primary-btn:disabled { background: #B0BEC5; cursor: not-allowed; box-shadow: none; color: #ECEFF1; }
 
-  /* 大廳 */
   .lobby-card { background: rgba(255, 255, 255, 0.95); border-radius: 24px; padding: 30px 40px; text-align: center; max-width: 500px; width: 100%; box-shadow: 0 12px 40px rgba(0,0,0,0.15); }
   .name-input { width: 100%; padding: 14px; font-size: 18px; border: 3px solid #AB47BC; border-radius: 16px; outline: none; text-align: center; margin-bottom: 20px; font-family: inherit; }
   .char-options { display: flex; justify-content: center; gap: 16px; margin-bottom: 24px; }
   .char-btn { background: #F3E5F5; border: 3px solid transparent; border-radius: 16px; padding: 12px 20px; font-size: 40px; cursor: pointer; transition: all 0.2s; }
   .char-btn.selected { border-color: #8E24AA; background: #E1BEE7; transform: scale(1.1); box-shadow: 0 4px 12px rgba(142,36,170,0.3); }
 
-  /* 教材輪播 */
   .carousel-wrap { background: white; border-radius: 20px; padding: 24px; max-width: 800px; width: 100%; box-shadow: 0 8px 24px rgba(0,0,0,0.1); margin-bottom: 10px; }
   .carousel-content { display: none; text-align: center; }
   .carousel-content.active { display: block; animation: fadeIn 0.4s; }
@@ -39,13 +36,11 @@
   .nav-btn:disabled { background: #CFD8DC; cursor: not-allowed; color: #90A4AE; }
   .keyboard-hint { text-align: center; color: #6A1B9A; font-weight: 700; margin-top: 10px; font-size: 14px; background: #F3E5F5; padding: 8px; border-radius: 8px;}
 
-  /* 遊戲頂部欄 */
   .game-header { background: white; border-radius: 16px; padding: 12px 24px; display: flex; align-items: center; justify-content: space-between; width: 100%; max-width: 800px; margin-bottom: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
   .badge { background: linear-gradient(135deg, #8E24AA, #4A148C); color: white; border-radius: 10px; padding: 6px 16px; font-weight: 700; }
   .score-box { background: #AB47BC; color: white; border-radius: 10px; padding: 6px 16px; font-weight: 800; transition: transform 0.2s;}
   .score-box.penalty { background: #E53935; transform: scale(1.1); }
 
-  /* 階段一：閃避遊戲 */
   .dodge-wrapper { display: flex; flex-direction: column; align-items: center; width: 100%; max-width: 600px; }
   .dodge-area { width: 400px; height: 400px; background: linear-gradient(180deg,#E3F2FD,#B3E5FC); border-radius: 20px; position: relative; overflow: hidden; box-shadow: inset 0 0 20px rgba(0,0,0,0.1), 0 8px 24px rgba(0,0,0,0.15); border: 4px solid #fff; }
   .player-char { position: absolute; font-size: 45px; bottom: 10px; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; z-index: 5; transition: none; }
@@ -55,7 +50,6 @@
   .stage-notify { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 48px; font-weight: 900; color: #FFD700; text-shadow: 2px 2px 10px #000; animation: scaleUp 1s ease-out; z-index: 10; pointer-events: none;}
   @keyframes scaleUp { from { transform: translate(-50%, -50%) scale(0.5); opacity: 0; } to { transform: translate(-50%, -50%) scale(1.5); opacity: 1; } }
 
-  /* 階段二：問答 */
   .quiz-area { background: white; border-radius: 20px; padding: 30px; max-width: 800px; width: 100%; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
   .quiz-q { font-size: 20px; font-weight: 700; color: #333; margin-bottom: 24px; line-height: 1.5; }
   .quiz-opts { display: flex; flex-direction: column; gap: 12px; }
@@ -64,21 +58,23 @@
   .opt-btn.correct-ans { background: #E8F5E9; border-color: #4CAF50; color: #2E7D32; }
   .opt-btn.wrong-ans { background: #FFEBEE; border-color: #E53935; color: #C62828; }
 
-  /* 彈出回饋 */
   .feedback-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: none; align-items: center; justify-content: center; z-index: 100; }
   .feedback-box { background: white; border-radius: 20px; padding: 30px; text-align: center; max-width: 450px; width: 90%; animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
   @keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
   .fb-title { font-size: 24px; font-weight: 900; margin-bottom: 12px; }
   .fb-desc { font-size: 16px; color: #333; line-height: 1.6; margin-bottom: 20px; text-align: left; background: #F5F5F5; padding: 16px; border-radius: 12px;}
+
+  @media (max-width: 450px) { .dodge-area { width: 320px; height: 350px; } }
   </style>
  </head>
  <body>
   <div id="game-container">
+   
    <div id="lobby-screen" class="screen active">
     <div class="lobby-card">
      <div class="game-title">🏪 營養闖關島</div>
-     <div class="game-subtitle">第三關：飲食迷思與實踐<br><span style="font-size:14px;color:#888;">(通關門檻：210 分 / 滿分 300 分)</span></div>
-     <input type="text" id="player-name" class="name-input" placeholder="輸入你的名字" maxlength="10"> 
+     <div class="game-subtitle">第三關：飲食風險與迷思破解<br><span style="font-size:14px;color:#888;">(通關門檻：210 分 / 滿分 300 分)</span></div>
+     <input type="text" id="player-name" class="name-input" placeholder="👉 請先輸入你的名字" maxlength="10"> 
      <div class="char-select-title" style="font-weight:700; color:#666; margin-bottom:10px;">選擇你的探險化身：</div>
      <div class="char-options">
        <button class="char-btn" onclick="selectChar('🍎', this)">🍎</button>
@@ -98,7 +94,9 @@
       <div class="carousel-content"><img src="飲食風險_3.JPG" style="width: 100%; border-radius: 12px;"></div>
       <div class="carousel-content"><img src="飲食風險_4.JPG" style="width: 100%; border-radius: 12px;"></div>
       <div class="carousel-nav" id="carousel-nav"></div>
+      
       <div class="carousel-indicator" style="text-align: center; color: #888; margin-top: 10px;"><span id="carousel-page">1</span> / 4</div>
+      
     </div>
     <div class="keyboard-hint">⌨️ 提示：使用鍵盤【←】【→】方向鍵來切換圖片！</div>
    </div>
@@ -121,7 +119,7 @@
         <div class="player-char" id="dodge-player">🍌</div>
         <div id="stage-notify" class="stage-notify" style="display:none;"></div>
       </div>
-      <div class="keyboard-hint" style="width: 100%; margin-top: 16px;">⌨️ 電腦玩家可使用鍵盤【←】【→】方向鍵移動！</div>
+      <div class="keyboard-hint" style="width: 100%; margin-top: 16px;">⌨️ 電腦玩家可使用鍵盤【←】【→】方向鍵移動！閃避地雷食物喔！</div>
     </div>
    </div>
    
@@ -165,7 +163,9 @@
   </div>
 
   <script>
+  /* 雲端試算表連結 */
   const GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbyo186iZFRTAFd_LG1dexDLRk4iPJhqVLXqqnTcSwHdF2PvG8kDvjUSDUG-E6GaNGoi3g/exec'; 
+
   const gameState = { name: '', character: '🍌', tutPage: 0, dodgeScore: 0, quizScore: 0, quizStep: 0, activeScreen: 'lobby-screen', focusedIndex: 0, isModalOpen: false, dodgeStage: 1 };
   const PASSING_SCORE = 210;
 
@@ -181,14 +181,4 @@
     { q: '同學說：「常吃炸雞排和薯條沒關係，只要每天運動30分鐘，就不會對心血管造成負擔。」這個觀念正確嗎？', opts: ['不正確，高油脂飲食仍會增加心血管負擔', '正確，運動可以完全抵銷油脂的傷害', '正確，只要流汗就能把油脂排出來', '不正確，要運動兩小時才能吃炸雞'], ans: 0, exp: '運動雖然好，但無法完全抵銷長期高油脂飲食對心血管造成的傷害與阻塞風險。' },
     { q: '關於健康風險，下列哪一個行為最容易導致肥胖、蛀牙與體力變差？', opts: ['愛吃零食與含糖飲料，且不運動', '每天喝充足的白開水', '吃富含膳食纖維的天然地瓜', '嘗試少量多餐且均衡飲食'], ans: 0, exp: '高糖飲食加上缺乏運動，是造成兒童蛀牙、肥胖以及體力下降的最主要原因。' },
     { q: '每天放學都買一杯「全糖珍珠奶茶」解渴，長期下來最容易引發哪種健康問題？', opts: ['導致肥胖及增加罹患糖尿病的風險', '骨骼變得更強壯', '幫助長高和增強視力', '提升大腦記憶力'], ans: 0, exp: '含糖飲料熱量極高，長期過量飲用會導致血糖不穩，增加肥胖與慢性病（如糖尿病）風險。' },
-    { q: '喜歡吃重口味，常常加很多醬油、胡椒鹽，或是常吃泡麵，最容易增加哪一種疾病的風險？', opts: ['高血壓與腎臟負擔', '蛀牙與牙周病', '骨質疏鬆症', '貧血與頭暈'], ans: 0, exp: '這些食物的「鈉（鹽分）」含量極高，攝取過多會使血壓升高，並加重腎臟的排毒負擔。' },
-    { q: '下列哪一種飲食習慣，長期下來最容易造成血管阻塞、引發心血管疾病？', opts: ['三餐常吃高油脂的油炸食物與加工肉品', '每天吃五種不同顏色的蔬果', '每天喝足夠的白開水', '以糙米取代白米當主食'], ans: 0, exp: '高油脂與加工肉品含有過多飽和脂肪，會累積在血管壁，增加心血管疾病的危險。' },
-    { q: '為了預防飲食引起的健康問題，我們應該培養什麼樣的良好習慣？', opts: ['飲食多樣化並遵守少油、少鹽、少糖的原則', '只吃自己喜歡的食物', '渴了就喝果汁代替水', '為了減肥完全不吃澱粉'], ans: 0, exp: '遵守「三少」原則並均衡攝取六大類食物，是預防各種飲食相關疾病的最佳防護罩。' },
-    { q: '小華最近常常便秘，肚子不舒服。他應該要「減少」哪種飲食習慣，並「增加」哪種食物的攝取？', opts: ['減少精緻零食，增加蔬菜水果與水分', '減少喝水，增加炸物', '減少蔬菜，增加白飯', '減少水果，增加含糖飲料'], ans: 0, exp: '蔬菜水果富含膳食纖維，搭配充足的水分，能有效促進腸胃蠕動、改善便秘。' },
-    { q: '長輩常說「吃得太鹹對身體不好」，下列哪一種食物的「隱藏鹽分（鈉）」通常很高，應該少吃？', opts: ['加工的火腿、香腸與熱狗', '新鮮的蘋果', '水煮蛋', '清蒸鮮魚'], ans: 0, exp: '加工肉品在製作與保存過程中會加入大量的鹽與調味料，屬於高鈉的「紅燈食物」。' },
-    { q: '如果想要預防蛀牙，除了吃完東西要仔細刷牙之外，飲食上最應該避免什麼？', opts: ['頻繁吃黏牙的甜食與含糖飲料', '多吃深色蔬菜', '喝鮮奶補充鈣質', '吃無調味的綜合堅果'], ans: 0, exp: '甜食與糖分容易附著在牙齒上，提供細菌養分產生酸性物質，進而腐蝕牙齒造成蛀牙。' },
-    { q: '為了快速減肥，小美決定每天「只吃蘋果」，不吃其他食物。這樣的做法會帶來什麼風險？', opts: ['會導致營養不良、肌肉流失與免疫力下降', '會非常健康且充滿活力', '會讓骨骼變得更強壯', '頭腦會變得更聰明'], ans: 0, exp: '極端的單一食物減肥法會讓身體缺乏蛋白質與脂肪等必需營養素，嚴重損害健康與發育。' },
-    { q: '睡前吃大量的宵夜（例如：麻辣鍋、炸雞排），最容易對身體造成什麼影響？', opts: ['引起胃食道逆流並增加腸胃負擔', '幫助睡眠品質提升', '隔天精神會更好', '有助於肌肉快速生長'], ans: 0, exp: '睡前吃太油、太飽，躺下時容易讓胃酸逆流，也讓腸胃在睡覺時無法休息。' },
-    { q: '在超商想買點心，下列哪一種替換方式可以有效「減少健康風險」？', opts: ['把炸薯條換成無加糖的烤地瓜', '把白開水換成運動飲料', '把新鮮水果換成水果軟糖', '把原味優格換成巧克力冰淇淋'], ans: 0, exp: '烤地瓜是天然的原態食物，富含纖維，比經過高溫油炸的加工薯條健康非常多。' },
-    { q: '預防兒童肥胖，下列哪一個生活習慣是「錯誤」的？', opts: ['以含糖飲料取代白開水當作水分來源', '每天睡足 8 到 10 小時', '減少看電視與滑手機的時間', '養成規律運動的習慣'], ans: 0, exp: '含糖飲料是造成肥胖的主要元兇，人體的水分來源絕對應該以白開水為主。' },
-    { q
+    { q: '喜歡吃重口味，常常加很多醬油、胡椒鹽，或是常吃泡麵，最容易增加哪一種疾病的風險？', opts: ['高血壓與腎臟負擔', '蛀
